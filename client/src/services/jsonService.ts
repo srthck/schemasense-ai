@@ -1,0 +1,50 @@
+import api from "./api";
+
+export interface SemanticField {
+  field: string;
+  inferred_type: string;
+  semantic_type: string;
+  confidence: number;
+  reasons: string[];
+}
+
+export interface GenerationResponse {
+  typescript: string;
+  semantics: SemanticField[];
+}
+
+export async function formatJson(input: string): Promise<string> {
+  try {
+    const response = await api.post("/api/format", { input });
+    if (!response.data.success) {
+      throw new Error(response.data.error || "Formatting failed");
+    }
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error || error.message || "Failed to format JSON");
+  }
+}
+
+export async function repairJson(input: string): Promise<string> {
+  try {
+    const response = await api.post("/api/repair", { input });
+    if (!response.data.success) {
+      throw new Error(response.data.error || "Repair failed");
+    }
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error || error.message || "Failed to repair JSON");
+  }
+}
+
+export async function generateTypes(input: string): Promise<GenerationResponse> {
+  try {
+    const response = await api.post("/api/generate-types", { input });
+    if (!response.data.success) {
+      throw new Error(response.data.error || "Type generation failed");
+    }
+    return response.data.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error || error.message || "Failed to generate types");
+  }
+}
