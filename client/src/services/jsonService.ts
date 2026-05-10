@@ -49,7 +49,7 @@ export async function repairJson(input: string): Promise<string> {
 
 export async function generateTypes(input: string): Promise<GenerationResponse> {
   try {
-    const response = await api.post("/api/generate-types", { input });
+    const response = await api.post("/generate-types", { input });
     if (!response.data.success) {
       throw new Error(response.data.error || "Type generation failed");
     }
