@@ -7,7 +7,7 @@ interface Props {
 
 /**
  * A professional developer-oriented panel for displaying semantic predictions
- * with confidence levels and explainability reasons.
+ * with confidence levels, explainability reasons, and inference source.
  */
 export default function SemanticPanel({ semantics, loading }: Props) {
   if (loading) {
@@ -39,9 +39,18 @@ export default function SemanticPanel({ semantics, loading }: Props) {
         >
           <div className="flex items-start justify-between mb-2">
             <div className="overflow-hidden mr-2">
-              <p className="text-[11px] font-mono text-indigo-400 truncate mb-1" title={item.field}>
-                {item.field}
-              </p>
+              <div className="flex items-center gap-2 mb-1">
+                <p className="text-[11px] font-mono text-indigo-400 truncate" title={item.field}>
+                  {item.field}
+                </p>
+                <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border ${
+                  item.source === "RULE" ? "bg-blue-500/10 text-blue-400 border-blue-500/20" :
+                  item.source === "ML" ? "bg-purple-500/10 text-purple-400 border-purple-500/20" :
+                  "bg-orange-500/10 text-orange-400 border-orange-500/20"
+                }`}>
+                  {item.source}
+                </span>
+              </div>
               <div className="flex items-center gap-2">
                 <span className="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">
                   {item.inferred_type}
@@ -66,7 +75,7 @@ export default function SemanticPanel({ semantics, loading }: Props) {
               </div>
             </div>
           </div>
-
+          
           <div className="mt-3 pt-2 border-t border-slate-800/50 space-y-1.5">
             <p className="text-[8px] font-bold text-slate-600 uppercase tracking-[0.2em] mb-1">Evidence</p>
             {item.reasons.map((reason, ridx) => (

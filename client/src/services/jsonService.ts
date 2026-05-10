@@ -6,11 +6,21 @@ export interface SemanticField {
   semantic_type: string;
   confidence: number;
   reasons: string[];
+  source: "RULE" | "ML" | "HYBRID";
+}
+
+export interface InferenceMetrics {
+  total_duration_ms: number;
+  traversal_duration_ms: number;
+  ml_calls_count: number;
+  fallback_triggered: boolean;
 }
 
 export interface GenerationResponse {
   typescript: string;
   semantics: SemanticField[];
+  was_repaired: boolean;
+  metrics: InferenceMetrics;
 }
 
 export async function formatJson(input: string): Promise<string> {

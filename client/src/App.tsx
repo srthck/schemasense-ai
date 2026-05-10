@@ -2,14 +2,17 @@ import { useEffect, useState, useCallback } from "react";
 import JsonEditor from "./components/JsonEditor";
 import SemanticPanel from "./components/SemanticPanel";
 import { formatJson, repairJson, generateTypes } from "./services/jsonService";
-import type { SemanticField } from "./services/jsonService";
+import type { SemanticField, InferenceMetrics } from "./services/jsonService";
 import api from "./services/api";
 import Toast, { type ToastType } from "./components/Toast";
-import { Loader2, Copy, Play, Wrench, Code2, BrainCircuit, Activity } from "lucide-react";
+import { Loader2, Copy, Play, Wrench, Code2, BrainCircuit, Activity, Zap, Timer, Server, AlertCircle } from "lucide-react";
+
 function App() {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [semantics, setSemantics] = useState<SemanticField[]>([]);
+  const [metrics, setMetrics] = useState<InferenceMetrics | null>(null);
+  const [wasRepaired, setWasRepaired] = useState(false);
   const [loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [activeAction, setActiveAction] = useState<string | null>(null);
@@ -76,8 +79,14 @@ function App() {
       const result = await generateTypes(input);
       setOutput(result.typescript);
       setSemantics(result.semantics);
+      setMetrics(result.metrics);
+      setWasRepaired(result.was_repaired);
       setOutputLanguage("typescript");
-      showToast("Types & Semantics generated", "success");
+      if (result.was_repaired) {
+        showToast("JSON repaired & Types generated", "warning");
+      } else {
+        showToast("Types & Semantics generated", "success");
+      }
     } catch (err: any) {
       showToast(err.message, "error");
     } finally {
@@ -157,15 +166,19 @@ function App() {
               </div>
 
               <div className="flex items-center gap-4">
-                {semantics.length > 0 && (
-                  <div className="hidden sm:flex items-center gap-3 pr-4 border-r border-slate-700">
+                {metrics && (
+                  <div className="hidden sm:flex items-center gap-4 pr-4 border-r border-slate-700">
                     <div className="flex flex-col items-end">
-                      <span className="text-[9px] text-slate-500 font-bold uppercase tracking-tighter">Semantics</span>
-                      <span className="text-xs font-mono text-indigo-400 font-bold">{semantics.length} Fields</span>
+                      <span className="text-[8px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-1">
+                        <Timer className="w-2 h-2" /> Latency
+                      </span>
+                      <span className="text-[11px] font-mono text-indigo-400 font-bold">{metrics.total_duration_ms}ms</span>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-[9px] text-slate-500 font-bold uppercase tracking-tighter">Inference</span>
-                      <span className="text-xs font-mono text-emerald-400 font-bold">Hybrid</span>
+                      <span className="text-[8px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-1">
+                        <Server className="w-2 h-2" /> ML Calls
+                      </span>
+                      <span className="text-[11px] font-mono text-emerald-400 font-bold">{metrics.ml_calls_count}</span>
                     </div>
                   </div>
                 )}
@@ -185,6 +198,12 @@ function App() {
               <div className="flex-1 flex flex-col bg-slate-800 rounded-xl p-4 border border-slate-700 shadow-sm min-h-[250px]">
                 <div className="flex items-center justify-between mb-3 shrink-0">
                   <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Input JSON</h2>
+                  {wasRepaired && (
+                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 text-amber-500 animate-pulse">
+                      <AlertCircle className="w-3 h-3" />
+                      <span className="text-[9px] font-bold uppercase tracking-tight">Auto-Repaired</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1 relative rounded-lg overflow-hidden border border-slate-900/50">
                   <JsonEditor value={input} onChange={setInput} language="json" />
@@ -213,11 +232,37 @@ function App() {
 
           {/* Right Column: Semantic Analysis Sidebar */}
           <div className="lg:w-80 flex flex-col bg-slate-800 rounded-xl p-4 border border-slate-700 shadow-sm shrink-0 min-h-[400px] lg:min-h-0">
-            <div className="flex items-center gap-2 mb-4 shrink-0 pb-3 border-b border-slate-700/50">
-              <Activity className="w-3.5 h-3.5 text-indigo-500" />
-              <h2 className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em]">Semantic Analysis</h2>
+            <div className="flex items-center justify-between mb-4 shrink-0 pb-3 border-b border-slate-700/50">
+              <div className="flex items-center gap-2">
+                <Activity className="w-3.5 h-3.5 text-indigo-500" />
+                <h2 className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em]">Semantic Analysis</h2>
+              </div>
+              {semantics.length > 0 && (
+                <span className="text-[9px] font-mono text-slate-500 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
+                  {semantics.length} fields
+                </span>
+              )}
             </div>
             <SemanticPanel semantics={semantics} loading={analyzing} />
+            
+            {metrics && (
+              <div className="mt-4 pt-4 border-t border-slate-700/50 grid grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                  <span className="text-[8px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-1">
+                    <Zap className="w-2 h-2 text-yellow-500" /> Traversal
+                  </span>
+                  <span className="text-xs font-mono text-slate-300">{metrics.traversal_duration_ms}ms</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[8px] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-1">
+                    <BrainCircuit className="w-2 h-2 text-indigo-500" /> Mode
+                  </span>
+                  <span className="text-xs font-mono text-slate-300">
+                    {metrics.fallback_triggered ? "Fallback" : "Standard"}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
 
         </div>

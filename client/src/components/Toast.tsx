@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export type ToastType = "success" | "error" | "info";
+export type ToastType = "success" | "error" | "info" | "warning";
 
 export type ToastProps = {
   message: string;
@@ -27,6 +27,7 @@ export default function Toast({ message, type, onClose }: ToastProps) {
     success: "bg-emerald-600",
     error: "bg-red-600",
     info: "bg-indigo-600",
+    warning: "bg-amber-600",
   }[type];
 
   return (
