@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const ML_SERVICE_URL = "http://127.0.0.1:8000";
+// Requirement: Use environment variables, NOT hardcoded URLs.
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://127.0.0.1:8000";
 
 export type PredictionResult = {
   prediction: string;
@@ -25,7 +26,7 @@ export async function predictSemanticType(key: string, value: any): Promise<Pred
     }
     return null;
   } catch (error) {
-    // Fail gracefully: if service is down or times out, return null to fallback
+    // Requirement: Fail gracefully, errors do not crash the server.
     return null;
   }
 }

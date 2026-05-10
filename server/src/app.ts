@@ -4,11 +4,11 @@ import jsonRoutes from "./routes/jsonRoutes";
 
 const app = express();
 
-const corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
-};
+// Temporary acceptable configuration during deployment phase
+app.use(cors({
+  origin: process.env.CLIENT_ORIGIN || "*"
+}));
 
-app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/api", jsonRoutes);
