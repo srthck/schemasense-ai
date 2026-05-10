@@ -16,8 +16,8 @@ const typeGenerationService_1 = require("../services/typeGenerationService");
 const format = (req, res) => {
     try {
         const { input } = req.body;
-        if (!input || typeof input !== "string") {
-            res.status(400).json({ success: false, error: "Valid string input is required." });
+        if (typeof input !== "string") {
+            res.status(400).json({ success: false, error: "Input must be a string." });
             return;
         }
         const data = (0, formatService_1.formatJson)(input);
@@ -31,8 +31,8 @@ exports.format = format;
 const repair = (req, res) => {
     try {
         const { input } = req.body;
-        if (!input || typeof input !== "string") {
-            res.status(400).json({ success: false, error: "Valid string input is required." });
+        if (typeof input !== "string") {
+            res.status(400).json({ success: false, error: "Input must be a string." });
             return;
         }
         const data = (0, repairService_1.repairJson)(input);
@@ -45,17 +45,27 @@ const repair = (req, res) => {
 exports.repair = repair;
 const generate = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { input } = req.body;
-        if (!input || typeof input !== "string") {
-            res.status(400).json({ success: false, error: "Valid string input is required." });
+        // Contract Check: Support both 'input' and 'json' for high resilience during migration
+        const input = req.body.input || req.body.json;
+        if (input === undefined || typeof input !== "string") {
+            res.status(400).json({
+                success: false,
+                error: "Valid string input is required in 'input' field."
+            });
             return;
         }
+        // Step 3: Malformed JSON repair happens INSIDE generateTypes pipeline
+        // before semantic analysis or quicktype generation.
         const data = yield (0, typeGenerationService_1.generateTypes)(input);
-        // data is now { types: string, semantics: SemanticField[] }
+        // Response remains structured: { typescript, semantics, was_repaired, metrics }
         res.json({ success: true, data });
     }
     catch (error) {
-        res.status(400).json({ success: false, error: error.message || "Type generation failed." });
+        // Step 4: Graceful error handling for irreparable JSON
+        res.status(400).json({
+            success: false,
+            error: error.message || "Type generation failed."
+        });
     }
 });
 exports.generate = generate;

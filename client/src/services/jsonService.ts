@@ -25,7 +25,8 @@ export interface GenerationResponse {
 
 export async function formatJson(input: string): Promise<string> {
   try {
-    const response = await api.post("/api/format", { input });
+    // baseURL already includes /api, so we use relative paths
+    const response = await api.post("/format", { input });
     if (!response.data.success) {
       throw new Error(response.data.error || "Formatting failed");
     }
@@ -37,7 +38,8 @@ export async function formatJson(input: string): Promise<string> {
 
 export async function repairJson(input: string): Promise<string> {
   try {
-    const response = await api.post("/api/repair", { input });
+    // baseURL already includes /api, so we use relative paths
+    const response = await api.post("/repair", { input });
     if (!response.data.success) {
       throw new Error(response.data.error || "Repair failed");
     }
@@ -49,6 +51,7 @@ export async function repairJson(input: string): Promise<string> {
 
 export async function generateTypes(input: string): Promise<GenerationResponse> {
   try {
+    // baseURL already includes /api, so we use relative paths
     const response = await api.post("/generate-types", { input });
     if (!response.data.success) {
       throw new Error(response.data.error || "Type generation failed");
