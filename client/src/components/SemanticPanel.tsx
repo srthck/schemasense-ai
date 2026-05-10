@@ -1,4 +1,4 @@
-import { SemanticField } from "../services/jsonService";
+import type { SemanticField } from "../services/jsonService";
 
 interface Props {
   semantics: SemanticField[];
@@ -33,7 +33,7 @@ export default function SemanticPanel({ semantics, loading }: Props) {
   return (
     <div className="flex-1 overflow-y-auto space-y-3 pr-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
       {semantics.map((item, idx) => (
-        <div 
+        <div
           key={`${item.field}-${idx}`}
           className="p-3 bg-slate-900/40 rounded-lg border border-slate-800 hover:border-slate-700 transition-all group"
         >
@@ -53,22 +53,20 @@ export default function SemanticPanel({ semantics, loading }: Props) {
               </div>
             </div>
             <div className="flex flex-col items-end shrink-0">
-              <span className={`text-[10px] font-mono font-bold ${
-                item.confidence > 0.9 ? 'text-emerald-500' : 'text-yellow-500'
-              }`}>
+              <span className={`text-[10px] font-mono font-bold ${item.confidence > 0.9 ? 'text-emerald-500' : 'text-yellow-500'
+                }`}>
                 {Math.round(item.confidence * 100)}%
               </span>
               <div className="w-10 h-0.5 bg-slate-800 rounded-full mt-1 overflow-hidden">
-                <div 
-                  className={`h-full transition-all duration-700 ${
-                    item.confidence > 0.9 ? 'bg-emerald-500' : 'bg-yellow-500'
-                  }`}
+                <div
+                  className={`h-full transition-all duration-700 ${item.confidence > 0.9 ? 'bg-emerald-500' : 'bg-yellow-500'
+                    }`}
                   style={{ width: `${item.confidence * 100}%` }}
                 />
               </div>
             </div>
           </div>
-          
+
           <div className="mt-3 pt-2 border-t border-slate-800/50 space-y-1.5">
             <p className="text-[8px] font-bold text-slate-600 uppercase tracking-[0.2em] mb-1">Evidence</p>
             {item.reasons.map((reason, ridx) => (

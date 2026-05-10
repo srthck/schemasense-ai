@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import JsonEditor from "./components/JsonEditor";
 import SemanticPanel from "./components/SemanticPanel";
-import { formatJson, repairJson, generateTypes, SemanticField } from "./services/jsonService";
+import { formatJson, repairJson, generateTypes } from "./services/jsonService";
+import type { SemanticField } from "./services/jsonService";
 import api from "./services/api";
-import Toast, { ToastType } from "./components/Toast";
+import Toast, { type ToastType } from "./components/Toast";
 import { Loader2, Copy, Play, Wrench, Code2, BrainCircuit, Activity } from "lucide-react";
-
 function App() {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -17,7 +17,7 @@ function App() {
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
   useEffect(() => {
-    api.get("/").catch(() => {}); // silent ping
+    api.get("/").catch(() => { }); // silent ping
   }, []);
 
   const showToast = useCallback((message: string, type: ToastType) => {
@@ -124,14 +124,14 @@ function App() {
       <main className="p-4 md:p-6 flex-1 flex flex-col gap-6 min-h-0">
         {/* Main Layout Container */}
         <div className="flex flex-col lg:flex-row gap-6 flex-1 min-h-0">
-          
+
           {/* Left Column: Editors */}
           <div className="flex-1 flex flex-col gap-6 min-h-0">
-            
+
             {/* Toolbar */}
             <div className="flex flex-wrap gap-3 items-center justify-between bg-slate-800/40 p-3 rounded-xl border border-slate-800 shadow-sm">
               <div className="flex flex-wrap gap-3">
-                <button 
+                <button
                   onClick={handleFormat}
                   disabled={loading}
                   className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg transition-all text-xs font-bold uppercase tracking-wider">
@@ -139,7 +139,7 @@ function App() {
                   Format
                 </button>
 
-                <button 
+                <button
                   onClick={handleRepair}
                   disabled={loading}
                   className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg transition-all text-xs font-bold uppercase tracking-wider">
@@ -147,7 +147,7 @@ function App() {
                   Repair
                 </button>
 
-                <button 
+                <button
                   onClick={handleExportTs}
                   disabled={loading}
                   className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-lg transition-all text-xs font-bold uppercase tracking-wider shadow-lg shadow-indigo-500/20">
@@ -155,7 +155,7 @@ function App() {
                   Analyze & Export
                 </button>
               </div>
-              
+
               <div className="flex items-center gap-4">
                 {semantics.length > 0 && (
                   <div className="hidden sm:flex items-center gap-3 pr-4 border-r border-slate-700">
@@ -169,7 +169,7 @@ function App() {
                     </div>
                   </div>
                 )}
-                <button 
+                <button
                   onClick={handleCopyOutput}
                   disabled={!output || loading}
                   className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 disabled:opacity-30 disabled:cursor-not-allowed px-3 py-2 rounded-lg transition-all text-xs font-bold uppercase tracking-wider text-slate-300">
@@ -196,11 +196,10 @@ function App() {
                 <div className="flex items-center justify-between mb-3 shrink-0">
                   <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Output</h2>
                   <div className="flex items-center gap-2">
-                    <span className={`text-[9px] px-2 py-0.5 rounded font-bold border ${
-                      outputLanguage === "typescript" 
-                        ? "bg-blue-500/10 text-blue-400 border-blue-500/20" 
-                        : "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
-                    }`}>
+                    <span className={`text-[9px] px-2 py-0.5 rounded font-bold border ${outputLanguage === "typescript"
+                      ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
+                      : "bg-yellow-500/10 text-yellow-400 border-yellow-500/20"
+                      }`}>
                       {outputLanguage === "typescript" ? "TS" : "JSON"}
                     </span>
                   </div>
@@ -225,10 +224,10 @@ function App() {
       </main>
 
       {toast && (
-        <Toast 
-          message={toast.message} 
-          type={toast.type} 
-          onClose={() => setToast(null)} 
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
         />
       )}
     </div>
