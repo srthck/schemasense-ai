@@ -1,3 +1,6 @@
+## Demo
+https://drive.google.com/file/d/1c4heGGIyN4tXE5opmrBDi2hgAPO52t1G/view?usp=drive_link
+
 # SchemaSense AI
 
 ![Continuous Integration](https://github.com/srthck/schemasense-ai/actions/workflows/test.yml/badge.svg)
@@ -175,3 +178,4 @@ The inference pipeline is optimized for developer workflows:
 ## System Architecture
 
 ![SchemaSense Architecture](./docs/architecture.png.png)
+
