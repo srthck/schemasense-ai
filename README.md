@@ -152,3 +152,7 @@ The inference pipeline is optimized for developer workflows:
 - Real-time model retraining via user feedback loop.
 - Batch processing for multi-file JSON schemas.
 - Advanced statistical profiling for unknown numeric distributions.
+
+## CI Pipeline
+
+The project uses automated validation with Vitest and GitHub Actions.
