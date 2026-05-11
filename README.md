@@ -68,13 +68,23 @@ The system includes a professional automated validation suite powered by Vitest 
 - **Recursive Traversal Testing**: Validates deep extraction of metadata and correct dot-notation path generation for nested structures.
 - **Array Handling Testing**: Ensures stable recursive typing for arrays of objects and nested primitive collections.
 
-### Local Execution
+### Local Validation
 
-To run the full backend test suite locally:
+To validate the codebase locally before pushing changes:
 
+**Backend (Server)**
 ```bash
 cd server
+npm install
+npm run build
 npm test
+```
+
+**Frontend (Client)**
+```bash
+cd client
+npm install
+npm run build
 ```
 
 ### Test Output Summary
@@ -88,6 +98,15 @@ npm test
  Test Files  4 passed (4)
       Tests  13 passed (13)
 ```
+
+## Continuous Integration
+
+The project utilizes GitHub Actions for automated quality assurance. Every push and pull request triggers a CI pipeline that validates:
+
+1.  **Backend Integrity**: Verifies dependency installation, TypeScript compilation, and executes the Vitest suite.
+2.  **Frontend Stability**: Ensures clean dependency installation and a successful production build.
+
+The pipeline is configured to fail immediately on any TypeScript errors, failing tests, or build breakages to maintain repository health.
 
 ## Local Development Setup
 
@@ -152,7 +171,3 @@ The inference pipeline is optimized for developer workflows:
 - Real-time model retraining via user feedback loop.
 - Batch processing for multi-file JSON schemas.
 - Advanced statistical profiling for unknown numeric distributions.
-
-## CI Pipeline
-
-The project uses automated validation with Vitest and GitHub Actions.
