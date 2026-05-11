@@ -22,7 +22,7 @@ jobs:
       - name: Install Dependencies
         run: |
           cd server
-          npm ci
+          npm install
 
       - name: TypeScript Integrity Check
         run: |
@@ -49,7 +49,7 @@ jobs:
       - name: Install Dependencies
         run: |
           cd client
-          npm ci
+          npm install
 
       - name: Production Build Stability Check
         run: |
