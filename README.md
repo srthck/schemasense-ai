@@ -174,4 +174,4 @@ The inference pipeline is optimized for developer workflows:
 
 ## System Architecture
 
-![SchemaSense Architecture](./docs/architecture.png)
+![SchemaSense Architecture](./docs/architecture.png.png)
