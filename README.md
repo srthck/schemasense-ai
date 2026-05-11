@@ -1,5 +1,7 @@
 # SchemaSense AI
 
+![Continuous Integration](https://github.com/srthck/schemasense-ai/actions/workflows/test.yml/badge.svg)
+
 SchemaSense AI is a production-grade hybrid machine learning system designed to perform intelligent semantic analysis and type inference on complex JSON data structures. It bridges the gap between raw data and developer-friendly TypeScript interfaces by combining deterministic rule-based heuristics with a lightweight Logistic Regression classifier for high-precision field annotation.
 
 ## Project Overview
@@ -54,6 +56,38 @@ Every semantic prediction includes a collection of "Evidence" markers:
 - Frontend: React, Tailwind CSS, Monaco Editor, Lucide Icons
 - Backend: Express.js, Axios, Quicktype-core
 - ML/AI: FastAPI, Scikit-learn, Pandas, Numpy, Joblib
+
+## Testing
+
+The system includes a professional automated validation suite powered by Vitest to ensure the integrity of the parsing and inference engine.
+
+### Core Test Suites
+
+- **Malformed JSON Validation**: Verifies the repair engine's ability to normalize unquoted keys, missing commas, and trailing commas into valid JSON.
+- **Semantic Inference Testing**: Asserts the precision of regex and heuristic rules for emails, UUIDs, dates, and URLs.
+- **Recursive Traversal Testing**: Validates deep extraction of metadata and correct dot-notation path generation for nested structures.
+- **Array Handling Testing**: Ensures stable recursive typing for arrays of objects and nested primitive collections.
+
+### Local Execution
+
+To run the full backend test suite locally:
+
+```bash
+cd server
+npm test
+```
+
+### Test Output Summary
+
+```text
+ ✓ tests/repair.test.ts (4 tests)
+ ✓ tests/semantic.test.ts (4 tests)
+ ✓ tests/arrays.test.ts (3 tests)
+ ✓ tests/traversal.test.ts (2 tests)
+
+ Test Files  4 passed (4)
+      Tests  13 passed (13)
+```
 
 ## Local Development Setup
 

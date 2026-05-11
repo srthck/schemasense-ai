@@ -27,19 +27,19 @@ function repairJson(input) {
         // ---------------------------------------------------
         repaired = repaired.replace(/'([^'\\]*(?:\\.[^'\\]*)*)'/g, '"$1"');
         // ---------------------------------------------------
-        // 3. Quote unquoted keys
+        // 3. Insert missing commas between properties
+        // Handles:
+        // "John" age:
+        // 22 next:
+        // true next:
+        // } next:
+        // ] next:
+        // ---------------------------------------------------
+        repaired = repaired.replace(/(".*?"|\d+|true|false|null|\}|\])\s*("?[a-zA-Z0-9_]+"?\s*:)/g, '$1, $2');
+        // ---------------------------------------------------
+        // 4. Quote unquoted keys
         // ---------------------------------------------------
         repaired = repaired.replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":');
-        // ---------------------------------------------------
-        // 4. Insert missing commas between properties
-        // Example:
-        // "John"
-        // age:
-        // =>
-        // "John",
-        // age:
-        // ---------------------------------------------------
-        repaired = repaired.replace(/(\"[^\"]*\"|\d+|true|false|null)\s+([a-zA-Z_][a-zA-Z0-9_]*\s*:)/g, '$1,$2');
         // ---------------------------------------------------
         // 5. Fix missing commas between objects
         // Example:

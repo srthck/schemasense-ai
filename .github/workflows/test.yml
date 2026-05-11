@@ -1,0 +1,57 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate-backend:
+    name: Validate Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: |
+          cd server
+          npm ci
+
+      - name: TypeScript Integrity Check
+        run: |
+          cd server
+          npm run build
+
+      - name: Execute Automated Tests
+        run: |
+          cd server
+          npm test
+
+  validate-frontend:
+    name: Validate Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: |
+          cd client
+          npm ci
+
+      - name: Production Build Stability Check
+        run: |
+          cd client
+          npm run build
