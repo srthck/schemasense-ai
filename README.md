@@ -171,3 +171,7 @@ The inference pipeline is optimized for developer workflows:
 - Real-time model retraining via user feedback loop.
 - Batch processing for multi-file JSON schemas.
 - Advanced statistical profiling for unknown numeric distributions.
+
+## System Architecture
+
+![SchemaSense Architecture](./docs/architecture.png)
